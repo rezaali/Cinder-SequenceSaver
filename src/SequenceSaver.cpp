@@ -1,12 +1,12 @@
-#include <string>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <string>
 
 #include "SequenceSaver.h"
 
-#include "cinder/Utilities.h"
 #include "cinder/Log.h"
+#include "cinder/Utilities.h"
 
 #include "Paths.h"
 
@@ -19,9 +19,9 @@ namespace reza {
 namespace seq {
 SequenceSaver::SequenceSaver( const ci::app::WindowRef &window,
 	const std::function<void()> &drawFn,
-	const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn, 
-	const std::function<void(glm::vec2, glm::vec2, glm::vec2, glm::vec2)> &drawPostFn)
-	: mWindowRef( window ), mDrawFn( drawFn ), mDrawBgFn( drawBgFn ), mDrawPostFn(drawPostFn)
+	const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn,
+	const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawPostFn )
+	: mWindowRef( window ), mDrawFn( drawFn ), mDrawBgFn( drawBgFn ), mDrawPostFn( drawPostFn )
 {
 }
 
@@ -53,17 +53,17 @@ void SequenceSaver::save( const ci::CameraPersp &cam, const ci::fs::path &path, 
 			mDrawBgFn( ul, ur, lr, ll );
 		} );
 	}
-	
+
 	if( mDrawFn ) {
 		mTilerRef->setDrawFn( [this]() {
 			mDrawFn();
 		} );
 	}
 
-	if (mDrawPostFn) {
-		mTilerRef->setDrawPostFn([this](const vec2 &ul, const vec2 &ur, const vec2 &lr, const vec2 &ll) {
-			mDrawPostFn(ul, ur, lr, ll);
-		});
+	if( mDrawPostFn ) {
+		mTilerRef->setDrawPostFn( [this]( const vec2 &ul, const vec2 &ur, const vec2 &lr, const vec2 &ll ) {
+			mDrawPostFn( ul, ur, lr, ll );
+		} );
 	}
 
 	mRecording = true;
@@ -71,21 +71,17 @@ void SequenceSaver::save( const ci::CameraPersp &cam, const ci::fs::path &path, 
 
 void SequenceSaver::update()
 {
-	if( mCurrentFrame >= mTotalFrames ) {
-		mCurrentFrame = 0;
-	}
-	mCurrentFrame++;
 	mCurrentTime = float( mCurrentFrame ) / float( mTotalFrames );
 	if( mRecording ) {
-		CI_LOG_D("TIME: " + toString(mCurrentTime));   
+		CI_LOG_D( "TIME: " + toString( mCurrentTime ) );
 
 		int frameNumber = mCurrentFrame;
 		if( frameNumber <= mTotalFrames ) {
 			mProgress = float( frameNumber ) / float( mTotalFrames );
-			
+
 			std::stringstream out;
-			int width = 1 + int( log10( mTotalFrames ) ); 
-			out << fixed << setfill('0') << std::setw(width) << frameNumber;
+			int width = 1 + int( log10( mTotalFrames ) );
+			out << fixed << setfill( '0' ) << std::setw( width ) << frameNumber;
 
 			auto path = addPath( addPath( mSaveImagePath, mSaveImageName + out.str() ), mSaveImageExtension, "." );
 			writeImage( path, mTilerRef->getSurface(), ImageTarget::Options().quality( 1.0 ) );
@@ -95,6 +91,10 @@ void SequenceSaver::update()
 			mProgress = 0.0f;
 		}
 	}
+	if( mCurrentFrame >= mTotalFrames ) {
+		mCurrentFrame = 0;
+	}
+	mCurrentFrame++;
 }
 } // namespace seq
 } // namespace reza

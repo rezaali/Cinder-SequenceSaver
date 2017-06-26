@@ -38,12 +38,10 @@ namespace seq {
 typedef std::shared_ptr<class SequenceSaver> SequenceSaverRef;
 class SequenceSaver {
   public:
-	static SequenceSaverRef create( 
-		const ci::app::WindowRef &window, const std::function<void()> &drawFn, 
-		const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn = nullptr, 
-		const std::function<void(glm::vec2, glm::vec2, glm::vec2, glm::vec2)> &drawPostFn = nullptr )
+	static SequenceSaverRef create(
+		const ci::app::WindowRef &window, const std::function<void()> &drawFn, const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn = nullptr, const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawPostFn = nullptr )
 	{
-		return SequenceSaverRef( new SequenceSaver( window, drawFn, drawBgFn, drawPostFn) );
+		return SequenceSaverRef( new SequenceSaver( window, drawFn, drawBgFn, drawPostFn ) );
 	}
 	virtual ~SequenceSaver();
 
@@ -53,19 +51,14 @@ class SequenceSaver {
 
 	bool isRecording() { return mRecording; }
 	float getProgress() { return mProgress; }
-	float getCurrentTime() { return mCurrentTime; } 
-
+	float getCurrentTime() { return mCurrentTime; }
 	void setSizeMultiplier( int multiplier ) { mSizeMultiplier = multiplier; }
 	int getSizeMultiplier() { return mSizeMultiplier; }
-
 	void setTotalFrames( int totalframes ) { mTotalFrames = totalframes; }
 	int getTotalFrames() { return mTotalFrames; }
-
   protected:
-	SequenceSaver( 
-		const ci::app::WindowRef &window, const std::function<void()> &drawFn, 
-		const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn = nullptr, 
-		const std::function<void(glm::vec2, glm::vec2, glm::vec2, glm::vec2)> &drawPostFn = nullptr );
+	SequenceSaver(
+		const ci::app::WindowRef &window, const std::function<void()> &drawFn, const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawBgFn = nullptr, const std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> &drawPostFn = nullptr );
 
 	ci::app::WindowRef mWindowRef = nullptr;
 	ci::fs::path mSaveImagePath;
@@ -83,8 +76,7 @@ class SequenceSaver {
 	ci::CameraPersp mCam;
 	std::function<void()> mDrawFn;
 	std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> mDrawBgFn;
-	std::function<void(glm::vec2, glm::vec2, glm::vec2, glm::vec2)> mDrawPostFn;
-
+	std::function<void( glm::vec2, glm::vec2, glm::vec2, glm::vec2 )> mDrawPostFn;
 };
 } // namespace seq
 } // namespace reza

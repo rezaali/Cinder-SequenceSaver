@@ -47,7 +47,8 @@ class SequenceSaver {
 
 	void update();
 
-	void save( const ci::CameraPersp &cam, const ci::fs::path &path, const std::string &filename, const std::string &extension );
+	void save( const ci::CameraPersp &cam, const ci::fs::path &path, const std::string &filename, const std::string &extension, bool alpha  = true );
+    void save( const ci::fs::path &path, const std::string &filename, const std::string &extension, bool alpha  = true );
 
 	bool isRecording() { return mRecording; }
 	float getProgress() { return mProgress; }
